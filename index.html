@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=320px initial-scale=1.0" />
+<title>BrechtBoard</title>
+<meta name="mobile-web-app-capable" content="yes">
+     <link rel="icon" sizes="192x192" href="/icon.png">
+<link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
+<link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
+
+</head>
+<body>
+
+<form id="form1" name="form1" method="post" onsubmit="return false">
+  <label id="pwl" for="password">Passwort eingeben:</label>
+  <input type="password" name="pw" id="pw" />
+</form>
+
+<form id="form2" onsubmit="return false">
+<input type="submit" name="ok" id="ok" value="ok" onclick="onSubmit()"/>
+</form>
+
+
+<script type="text/javascript">
+	var paths = [];
+	var names = [];
+	var audios = [];
+	var buttons = [];
+	
+	var banner = new Image();
+  	  banner.src = "pics/brechtboard.jpg";
+  	  banner.style = "height:80px; width:320px"
+	
+	add("58centhaben.opus", "58 Cent");
+	add("allesgut.opus", "Alles Gut");
+	add("allesscheisse.opus", "Alles Scheiße");
+	add("baenke2.opus", "Bääänke");
+	add("baenke1.opus", "Bänke");
+	add("baguettejetzt.opus", "Brecht Baguette");
+	add("diewelt.opus", "Die Welt gehört denen...");
+	add("diewelt2.opus", "Die Welt draußen...");
+	add("fresse.opus", "Fresse");
+	add("gehpennen.opus", "Ich geh pennen");
+	add("goebbels.opus", "GOEBBELS");
+	add("gurke.opus", "Meine Gurke");
+	add("istdiefett.opus", "Ist die Fett?");
+	add("knarzigetraeume.opus", "Knarzige Träume");
+	add("malmal.opus", "malmalmal");
+	add("motherfucker.opus", "Scheiße Motherfucker");
+	add("mg42.opus", "MG 42");
+	add("mp40.opus", "MP 40");
+	add("noeauau.opus", "Nöauau");
+	add("ohtimmy.opus", "Oh Timmy");
+	add("petpeter.opus", "PET Peter");
+	add("spamtspeicher.opus", "Speicherspamer");
+	add("spankmyass.opus", "Spank my ass");
+	add("spanky.opus", "SPANKY");
+	add("wololo.opus", "Wololo");
+	add("zopfberuehrt.opus", "Wehe mein Zopf");
+
+	
+	
+	function loadSounds(){
+		for(var i = 0; i < paths.length; i++){
+			
+			var audio = new Audio(paths[i]);
+			audio.id = i + "";
+			
+			audio.onloadeddata = function(){
+				var aid = parseInt(this.id);
+				buttons[aid].disabled = false;
+			}
+			
+			audios.push(audio);
+			generateButton(i);
+		}
+			
+	}
+	
+	function generateButton(i){
+		var button = document.createElement("input");
+		button.type = "button";
+		button.name = paths[i];
+		button.value = names[i];
+		button.style = "height:50px; width:320px"
+		
+		button.onclick = function(){
+				var audio = audios[i];
+				
+				for(var j = 0; j < audios.length; j++){
+          var other = audios[j];
+          if(other != audio){
+            other.pause();
+            other.currentTime = 0;
+          }
+            
+				}
+				  
+				
+				audio.play()
+			
+			};
+		
+		button.disabled = true;
+		buttons.push(button);
+		document.body.appendChild(button); 
+	}
+	
+	function onSubmit(){
+  	 var pwField = document.getElementById("pw");
+  	 if(pwField.value == "knarzbrecht"){
+  	  document.getElementById("form1").remove();
+  	  document.getElementById("form2").remove();
+  	  
+  	  var div = document.createElement("div");
+  	  div.align = "center";
+  	 	div.appendChild(banner);
+    	document.body.appendChild(div);
+  	  document.body.appendChild(document.createElement("p"));
+  	  loadSounds();
+  	 }else{
+  	    pwField.value = ""; 
+  	 }
+	}
+	
+	function add(path, name){
+		paths.push("sounds/" + path);	
+		names.push(name);
+	}
+</script>
