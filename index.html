@@ -20,10 +20,10 @@
 <script type="text/javascript">
 	var mode = false;
 	
-	var anzahl = 2;
-	var paths = [[],[]];
-	var names = [[],[]];
-	var audios = [[],[]];
+	var anzahl = 3;
+	var paths = [[],[],[]];
+	var names = [[],[],[]];
+	var audios = [[],[],[]];
 	var buttons = [];
 	
 	var choosed = 0;
@@ -91,6 +91,7 @@
 	addW("anaal.opus","Anal");
 	addW("grinder.opus","Jetz mach mal");
 	
+	addP("nicht_puenktlich.opus","nicht Pünktlich");
 	
 	function loadSounds(){
 		for(var i = 0; i < paths[choosed].length; i++){
@@ -204,8 +205,12 @@
 				choosed = anzahl-1;
 			}
 		}
+		if(choosed >= bannersrc.length){
+			banner.src = bannersrc[0];
+		}else{
+			banner.src = bannersrc[choosed];
+		}
 		
-		banner.src = bannersrc[choosed];
 		clear();
 		loadSounds()
 		
@@ -223,6 +228,11 @@
 	function addW(path, name){
 		paths[1].push("sounds/floet/" + path);	
 		names[1].push(name);
+	}
+	
+	function addP(path, name){
+		paths[2].push("sounds/paddy/" + path);	
+		names[2].push(name);
 	}
 	
 	function getRandomInt(min, max) {
