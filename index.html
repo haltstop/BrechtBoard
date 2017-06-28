@@ -1,36 +1,48 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8">
+<head>
+<meta charset="UTF-8">
 <meta name="viewport" content="width=320px initial-scale=1.0" />
 <title>BrechtBoard</title>
 <meta name="mobile-web-app-capable" content="yes">
-     <link rel="icon" sizes="192x192" href="/icon.png">
+<link rel="icon" sizes="192x192" href="/icon.png">
 <link rel="icon" type="image/png" href="favicon-32x32.png" sizes="32x32" />
 <link rel="icon" type="image/png" href="favicon-16x16.png" sizes="16x16" />
-
 </head>
 <body>
-
 <form id="form1" name="form1" method="post" onsubmit="return false">
   <label id="pwl" for="password">Passwort eingeben:</label>
   <input type="password" name="pw" id="pw" />
 </form>
-
 <form id="form2" onsubmit="return false">
-<input type="submit" name="ok" id="ok" value="ok" onclick="onSubmit()"/>
+  <input type="submit" name="ok" id="ok" value="ok" onclick="onSubmit()"/>
 </form>
-
-
 <script type="text/javascript">
-	var paths = [];
-	var names = [];
-	var audios = [];
+	var mode = true;
+	
+	var anzahl = 2;
+	var paths = [[],[]];
+	var names = [[],[]];
+	var audios = [[],[]];
 	var buttons = [];
 	
+	var choosed = 0;
+	
+	
+	
+	
+	var bannersrc = ["pics/brechtboard.jpg","pics/flotzboard.jpg"]
 	var banner = new Image();
-  	  banner.src = "pics/brechtboard.jpg";
+  	  banner.src = bannersrc[choosed];
   	  banner.style = "height:80px; width:320px"
+	
+	var pfeilL = new Image();
+	pfeilL.src = "pics/pfeil_l.png";
+	pfeilL.addEventListener('click', function() { wisch(false) }, false);
+	
+	var pfeilR =  new Image();
+	pfeilR.src = "pics/pfeil_r.png";
+	pfeilR.addEventListener('click', function() { wisch(true) }, false);
 	
 	add("58centhaben.opus", "58 Cent");
 	add("allesgut.opus", "Alles Gut");
@@ -63,74 +75,159 @@
 	add("essbare_speck.opus", "Essbare Speck");
 	add("bier_trinken.opus", "Bier trinken");
 	add("schnuppe.opus", "Schnuppe");
+	add("frohes_neues.opus", "frohes Neues");
+	add("drogenschiff_treue.opus", "MS Treue");
+	add("pferdebier_alta.opus", "Pferdebier");
 	
+	
+	
+	addW("jahuhihihi_hallo.opus","Jahuhihihi hallo");
+	addW("zöpfiusbrechtallee.opus","Zöpfiusbrechtallee");
+	addW("jajaja.opus","jajaja..");
+	addW("patrick_anal.opus","Patrick..");
+	addW("knarzbrecht.opus","Knarzbrecht");
+	addW("kurwa.opus","kurwa..");
+	addW("wissenschaftlich.opus","wissenschaftlich..");
+	addW("anaal.opus","Anal");
+	addW("grinder.opus","Jetz mach mal");
 	
 	
 	function loadSounds(){
-		for(var i = 0; i < paths.length; i++){
+		for(var i = 0; i < paths[choosed].length; i++){
+			var bool = audios[choosed][i] == null;
+			if(bool){
+				var audio = new Audio(paths[choosed][i]);
+				audio.id = i + "";
 			
-			var audio = new Audio(paths[i]);
-			audio.id = i + "";
+				audio.onloadeddata = function(){
+					var aid = parseInt(this.id);
+					buttons[aid].disabled = false;
+				}
 			
-			audio.onloadeddata = function(){
-				var aid = parseInt(this.id);
-				buttons[aid].disabled = false;
+				audios[choosed].push(audio);
+				
 			}
 			
-			audios.push(audio);
-			generateButton(i);
+			generateButton(i, bool);
 		}
-			
-	}
-	
-	function generateButton(i){
-		var button = document.createElement("input");
-		button.type = "button";
-		button.name = paths[i];
-		button.value = names[i];
-		button.style = "height:50px; width:320px"
-		
-		button.onclick = function(){
-				var audio = audios[i];
-				
-				for(var j = 0; j < audios.length; j++){
-          var other = audios[j];
-          if(other != audio){
-            other.pause();
-            other.currentTime = 0;
-          }
-            
-				}
-				  
-				
-				audio.play()
-			
-			};
-		
-		button.disabled = true;
-		buttons.push(button);
-		document.body.appendChild(button); 
 	}
 	
 	function onSubmit(){
+	
   	 var pwField = document.getElementById("pw");
+	 
   	 if(pwField.value == "knarzbrecht"){
-  	  document.getElementById("form1").remove();
-  	  document.getElementById("form2").remove();
-  	  
-  	  var div = document.createElement("div");
-  	  div.align = "center";
-  	 	div.appendChild(banner);
-    	document.body.appendChild(div);
-  	  document.body.appendChild(document.createElement("p"));
-  	  loadSounds();
+  	  			start();
   	 }else{
   	    pwField.value = ""; 
   	 }
 	}
 	
-	function add(path, name){
-		paths.push("sounds/" + path);	
-		names.push(name);
+	
+	function start(){
+		document.getElementById("form1").remove();
+  	  document.getElementById("form2").remove();
+  	  
+  	  var div = document.createElement("div");
+  	  div.align = "center";
+  	 	
+		
+		banner.addEventListener('click', function() { playSound(getRandomInt(0,audios[choosed].length)) }, false);
+		
+		
+		div.appendChild(pfeilL);
+		div.appendChild(banner);
+		div.appendChild(pfeilR);
+		
+    	document.body.appendChild(div);
+  	  document.body.appendChild(document.createElement("p"));
+  	  loadSounds();
+		
 	}
-</script>
+	
+	
+	function clear(){
+		var i;
+		for (i in buttons){
+			document.body.removeChild(buttons[i]);
+		}
+		buttons = new Array();
+	}
+	
+	function generateButton(i, bool){
+		var button = document.createElement("input");
+		button.type = "button";
+		button.name = paths[choosed][i];
+		button.value = names[choosed][i];
+		button.style = "height:50px; width:320px"
+		
+		button.onclick = function(){
+			playSound(i);
+			
+		};
+		
+		if(bool){
+			button.disabled = true;
+		}
+		
+		buttons.push(button);
+		document.body.appendChild(button); 
+	}
+	
+	function playSound(i){
+		var audio = audios[choosed][i];
+		for(var k = 0; k < audios.length; k++){
+			for(var j = 0; j < audios[k].length; j++){
+        	 var other = audios[k][j];
+         	 if(other != audio){
+       			    other.pause();
+       			    other.currentTime = 0;
+        	 }
+            
+		}		
+		}
+				
+		audio.play()
+		
+	}
+	
+	function wisch(rechts){
+		
+		if(rechts){
+			choosed ++;		
+			if(choosed >= anzahl){
+				choosed = 0;	
+			}
+		}else{
+			choosed--;
+			if(choosed < 0){
+				choosed = anzahl-1;
+			}
+		}
+		
+		banner.src = bannersrc[choosed];
+		clear();
+		loadSounds()
+		
+		
+	}
+	
+	
+	
+	
+	function add(path, name){
+		paths[0].push("sounds/flo/" + path);	
+		names[0].push(name);
+	}
+	
+	function addW(path, name){
+		paths[1].push("sounds/floet/" + path);	
+		names[1].push(name);
+	}
+	
+	function getRandomInt(min, max) {
+   		 return Math.floor(Math.random() * (max - min + 1)) + min;
+	}
+	
+	if(mode){start()};
+</script> 
