@@ -18,14 +18,21 @@
   <input type="submit" name="ok" id="ok" value="ok" onclick="onSubmit()"/>
 </form>
 <script type="text/javascript">
+	
+	//Wenn auf true, dann wird das PW-Feld übersprungen (nützlich bei tests)
 	var mode = false;
 	
+	//Anzahl der Brechtboards
 	var anzahl = 3;
+	//Hier werden die Pfade zu den Audios gespeichert
 	var paths = [[],[],[]];
+	//Die Beschriftungen der Buttons
 	var names = [[],[],[]];
+	//Die Audio-Dateien
 	var audios = [[],[],[]];
+	//Die Schaltknöppe, um Sounds abzuspielen
 	var buttons = [];
-	
+	//Welches Brechtboard gerade ausgewählt ist
 	var choosed = 0;
 	
 	
@@ -93,6 +100,8 @@
 	
 	addP("nicht_puenktlich.opus","nicht Pünktlich");
 	
+	//Läd falls noch nicht geladen die Sounds des gewählten Brechtboards
+	//und erstellt die Buttons hierfür
 	function loadSounds(){
 		for(var i = 0; i < paths[choosed].length; i++){
 			var bool = audios[choosed][i] == null;
@@ -113,6 +122,7 @@
 		}
 	}
 	
+	//Falls der OK-Button beim Passwortfeld gedrückt wurde
 	function onSubmit(){
 	
   	 var pwField = document.getElementById("pw");
@@ -124,7 +134,7 @@
   	 }
 	}
 	
-	
+	//Nach der richtigen Eingabe des PW, wird das Brechtboard "gestartet"
 	function start(){
 		document.getElementById("form1").remove();
   	  document.getElementById("form2").remove();
@@ -146,7 +156,7 @@
 		
 	}
 	
-	
+	//Löscht die Buttons
 	function clear(){
 		var i;
 		for (i in buttons){
@@ -155,6 +165,7 @@
 		buttons = new Array();
 	}
 	
+	//Generiert den i-ten Button, bool == true => sound noch nicht geladen
 	function generateButton(i, bool){
 		var button = document.createElement("input");
 		button.type = "button";
@@ -175,6 +186,7 @@
 		document.body.appendChild(button); 
 	}
 	
+	//Spielt den gewünschten Sound ab, stoppt alle anderen Sounds
 	function playSound(i){
 		var audio = audios[choosed][i];
 		for(var k = 0; k < audios.length; k++){
@@ -192,6 +204,7 @@
 		
 	}
 	
+	//wechselt das Soundboard
 	function wisch(rechts){
 		
 		if(rechts){
@@ -219,17 +232,18 @@
 	
 	
 	
-	
+	//Sound zum Brechtboard hinzufügen
 	function add(path, name){
 		paths[0].push("sounds/flo/" + path);	
 		names[0].push(name);
 	}
-	
+	//Sound zum Flotzboard hinzufügen
 	function addW(path, name){
 		paths[1].push("sounds/floet/" + path);	
 		names[1].push(name);
 	}
 	
+	//Sound zum Paddyboard hinzufügen
 	function addP(path, name){
 		paths[2].push("sounds/paddy/" + path);	
 		names[2].push(name);
