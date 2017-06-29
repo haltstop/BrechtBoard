@@ -159,6 +159,7 @@
 	//Löscht die Buttons
 	function clear(){
 		var i;
+		//for each-Schleife in Javascript
 		for (i in buttons){
 			document.body.removeChild(buttons[i]);
 		}
@@ -192,10 +193,10 @@
 		for(var k = 0; k < audios.length; k++){
 			for(var j = 0; j < audios[k].length; j++){
         	 var other = audios[k][j];
-         	 if(other != audio){
+         //	 if(other != audio){
        			    other.pause();
        			    other.currentTime = 0;
-        	 }
+        	// }
             
 		}		
 		}
